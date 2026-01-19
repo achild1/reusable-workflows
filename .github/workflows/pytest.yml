@@ -1,0 +1,44 @@
+name: Python Test
+
+on:
+  workflow_call:
+    inputs:
+      caller:
+        required: true
+        type: string
+      runs_on:
+        required: false
+        default: ubuntu-latest
+        type: string
+      python_version:
+        required: false
+        default: 3.11
+        type: string
+
+jobs:
+  lint:
+    runs-on: ${{ inputs.runs_on }}
+
+    steps:
+      - name: Welcome
+        run: |
+          echo Hello $CALLER ! Running PyTest
+        env: 
+          CALLER: ${{ inputs.caller }}
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pip install pytest
+          pytest
