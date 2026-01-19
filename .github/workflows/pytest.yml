@@ -21,36 +21,43 @@ on:
 jobs:
   test:
     runs-on: ${{ inputs.runs_on }}
-    if: contains(inputs.branch_name, 'feature')
 
     steps:
       - name: Welcome
         run: |
           echo Hello $CALLER ! Running PyTest
+          echo Branch Name: $BRANCH
         env: 
           CALLER: ${{ inputs.caller }}
+          BRANCH: ${{ inputs.branch_name }}
       - name: 'Checkout Repository'
+        if: contains(inputs.branch_name, 'feature')
         uses: actions/checkout@v5
 
       - name: Set up Python
+        if: contains(inputs.branch_name, 'feature')
         uses: actions/setup-python@v4
         with:
           python-version: ${{ inputs.python_version }}
 
       - name: Check formatting with Black
+        if: contains(inputs.branch_name, 'feature')
         uses: psf/black@stable
 
       - name: Install dependencies
+        if: contains(inputs.branch_name, 'feature')
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run tests
+        if: contains(inputs.branch_name, 'feature')
         run: |
           pip install pytest
           pytest -vv > pytest-results.txt
 
       - uses: actions/upload-artifact@v4
+        if: contains(inputs.branch_name, 'feature')
         with:
           name: pytest-results-${{ inputs.python_version }}
           path: pytest-results.txt
