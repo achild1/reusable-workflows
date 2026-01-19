@@ -41,4 +41,9 @@ jobs:
       - name: Run tests
         run: |
           pip install pytest
-          pytest
+          pytest -vv > pytest-results.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-${{ inputs.python_version }}
+          path: pytest-results.txt
