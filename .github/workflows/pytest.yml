@@ -14,11 +14,14 @@ on:
         required: false
         default: 3.11
         type: string
+      branch_name:
+        required: true
+        type: string
 
 jobs:
   test:
     runs-on: ${{ inputs.runs_on }}
-    if: contains(github.ref_name, 'feature')
+    if: contains(inputs.branch_name, 'feature')
 
     steps:
       - name: Welcome
